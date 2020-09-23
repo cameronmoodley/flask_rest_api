@@ -7,9 +7,13 @@ import os
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+print(basedir)
+
 # Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite///' + \
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
     os.path.join(basedir, 'db.sqlite')
+
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Init DB
@@ -44,6 +48,33 @@ class ProductSchema(ma.Schema):
 # Init Schema
 product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
+
+# Create a Product
+
+# Add a product
+
+
+@app.route('/product', methods=['POST'])
+def add_product():
+    name = request.json['name']
+    description = request.json['description']
+    price = request.json['price']
+    qty = request.json['qty']
+
+    new_product = Product(name, description, price, qty)
+    db.session.add(new_product)
+    db.session.commit()
+
+    return product_schema.jsonify(new_product)
+
+# Get all products
+
+
+@app.route('/product', methods=['GET'])
+def get_all_products():
+    all_products = Product.query.all()
+    result = products_schema.dump(all_products)
+    return jsonify(result)
 
 
 # Run Server
