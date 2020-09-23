@@ -77,6 +77,33 @@ def get_all_products():
     return jsonify(result)
 
 
+@app.route('/product/<id>', methods=['GET'])
+def get_all_product(id):
+    product = Product.query.get(id)
+    return product_schema.jsonify(product)
+
+
+# Update a product
+# Update a Product
+@app.route('/product/<id>', methods=['PUT'])
+def update_product(id):
+    product = Product.query.get(id)
+
+    name = request.json['name']
+    description = request.json['description']
+    price = request.json['price']
+    qty = request.json['qty']
+
+    product.name = name
+    product.description = description
+    product.price = price
+    product.qty = qty
+
+    db.session.commit()
+
+    return product_schema.jsonify(product)
+
+
 # Run Server
 if __name__ == '__main__':
     app.run(debug=True)
