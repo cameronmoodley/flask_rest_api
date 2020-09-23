@@ -83,7 +83,6 @@ def get_all_product(id):
     return product_schema.jsonify(product)
 
 
-# Update a product
 # Update a Product
 @app.route('/product/<id>', methods=['PUT'])
 def update_product(id):
@@ -99,6 +98,17 @@ def update_product(id):
     product.price = price
     product.qty = qty
 
+    db.session.commit()
+
+    return product_schema.jsonify(product)
+
+# Delete Product
+
+
+@app.route('/product/<id>', methods=['DELETE'])
+def delete_product(id):
+    product = Product.query.get(id)
+    db.session.delete(product)
     db.session.commit()
 
     return product_schema.jsonify(product)
